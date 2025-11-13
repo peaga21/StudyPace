@@ -1,0 +1,31 @@
+# Arquivos gerados pelo Flutter.
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.dart_tool/
+build/
+
+# Arquivos de IDEs.
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Arquivos de sistema operacional.
+.DS_Store
+Thumbs.db
+
+# Arquivos de log.
+*.log
+
+# Arquivos de build do Android.
+android/app/src/main/assets/flutter_assets/kernel_blob.bin
+android/app/src/main/assets/flutter_assets/isolate_snapshot_data
+android/app/src/main/assets/flutter_assets/vm_snapshot_data
+android/local.properties
+
+# Arquivos de build do iOS.
+ios/Flutter/App.framework
+ios/Flutter/engine.framework
+ios/Flutter/flutter_assets/kernel_blob.bin
