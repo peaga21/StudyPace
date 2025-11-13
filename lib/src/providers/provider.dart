@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../services/prefs_service.dart';
+import '../services/prefs_service.dart';
 
 /// Gerencia o estado relacionado ao timer, blocos de estudo e progresso.
 ///
