@@ -1,6 +1,7 @@
 /// Este arquivo contém classes de modelo e mappers.
 /// Mappers são responsáveis por converter dados de um formato para outro,
 /// como, por exemplo, converter um JSON de uma API para um objeto Dart.
+library;
 
 /// Representa o modelo de dados para uma dica de estudo.
 class StudyTip {

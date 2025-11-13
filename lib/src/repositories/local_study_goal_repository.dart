@@ -1,8 +1,7 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'study_goal_repository.dart';
 import '../models/study_goal.dart';
+import 'dart:convert';
 
 class LocalStudyGoalRepository implements StudyGoalRepository {
   static const String _storageKey = 'study_goals';
@@ -12,13 +11,13 @@ class LocalStudyGoalRepository implements StudyGoalRepository {
     final prefs = await SharedPreferences.getInstance();
     final String? goalsJson = prefs.getString(_storageKey);
     
-    if (goalsJson == null) return [];
+    if (goalsJson == null || goalsJson.isEmpty) return [];
     
     try {
-      // Simulando desserialização - você pode usar json.decode depois
-      final List<dynamic> goalsList = []; // Substituir por json.decode
+      final List<dynamic> goalsList = json.decode(goalsJson);
       return goalsList.map((goalMap) => StudyGoal.fromMap(goalMap)).toList();
     } catch (e) {
+      print('Erro ao carregar metas: $e');
       return [];
     }
   }
@@ -26,7 +25,11 @@ class LocalStudyGoalRepository implements StudyGoalRepository {
   @override
   Future<StudyGoal?> getGoalById(String id) async {
     final goals = await getAllGoals();
-    return goals.firstWhereOrNull((goal) => goal.id == id);
+    try {
+      return goals.firstWhere((goal) => goal.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -54,9 +57,10 @@ class LocalStudyGoalRepository implements StudyGoalRepository {
   Future<void> updateProgress(String id, int minutesCompleted) async {
     final goal = await getGoalById(id);
     if (goal != null) {
+      final isCompleted = minutesCompleted >= goal.targetMinutes;
       final updatedGoal = goal.copyWith(
         completedMinutes: minutesCompleted,
-        isCompleted: minutesCompleted >= goal.targetMinutes,
+        isCompleted: isCompleted,
       );
       await saveGoal(updatedGoal);
     }
@@ -65,16 +69,13 @@ class LocalStudyGoalRepository implements StudyGoalRepository {
   Future<void> _saveAllGoals(List<StudyGoal> goals) async {
     final prefs = await SharedPreferences.getInstance();
     final goalsMapList = goals.map((goal) => goal.toMap()).toList();
-    // Simulando serialização - você pode usar json.encode depois
-    prefs.setString(_storageKey, 'saved_goals'); // Substituir por json.encode
+    final goalsJson = json.encode(goalsMapList);
+    await prefs.setString(_storageKey, goalsJson);
   }
-}
 
-extension on List<StudyGoal> {
-  StudyGoal? firstWhereOrNull(bool Function(StudyGoal goal) test) {
-    for (var element in this) {
-      if (test(element)) return element;
-    }
-    return null;
+  // NOVO: Limpar todas as metas (para debug)
+  Future<void> clearAllGoals() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_storageKey);
   }
 }

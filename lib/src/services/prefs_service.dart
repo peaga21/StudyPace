@@ -82,4 +82,8 @@ class PrefsService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
+  Future getPrivacyPolicyAccepted() async {}
+
+  Future arePoliciesAccepted() async {}
 }

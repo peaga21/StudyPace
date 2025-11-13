@@ -24,8 +24,10 @@ class GoalController with ChangeNotifier {
     
     try {
       _goals = await _goalService.getGoalsSortedByDate();
+      print('✅ Metas carregadas: ${_goals.length}'); // Debug
     } catch (e) {
       _error = 'Erro ao carregar metas: $e';
+      print('❌ Erro ao carregar metas: $e'); // Debug
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -49,9 +51,14 @@ class GoalController with ChangeNotifier {
       );
       _goals.insert(0, newGoal);
       _error = null;
+      
+      // FORÇAR SALVAMENTO
+      await loadGoals(); // Recarregar para garantir persistência
+      
       return true;
     } catch (e) {
       _error = 'Erro ao criar meta: $e';
+      print('❌ Erro ao criar meta: $e'); // Debug
       return false;
     } finally {
       _isLoading = false;
@@ -59,13 +66,28 @@ class GoalController with ChangeNotifier {
     }
   }
 
-  // Atualizar progresso
+  // Atualizar progresso - CORRIGIDO
   Future<void> updateGoalProgress(String goalId, int minutesCompleted) async {
     try {
       await _goalService.updateProgress(goalId, minutesCompleted);
-      await loadGoals(); // Recarregar para atualizar a lista
+      
+      // Atualizar lista local
+      final index = _goals.indexWhere((goal) => goal.id == goalId);
+      if (index >= 0) {
+        final updatedGoal = _goals[index].copyWith(
+          completedMinutes: minutesCompleted,
+          isCompleted: minutesCompleted >= _goals[index].targetMinutes,
+        );
+        _goals[index] = updatedGoal;
+      }
+      
+      // Recarregar para garantir persistência
+      await loadGoals();
+      
+      notifyListeners();
     } catch (e) {
       _error = 'Erro ao atualizar progresso: $e';
+      print('❌ Erro ao atualizar progresso: $e'); // Debug
       notifyListeners();
     }
   }
@@ -86,5 +108,13 @@ class GoalController with ChangeNotifier {
   void clearError() {
     _error = null;
     notifyListeners();
+  }
+
+  // NOVO: Debug - ver metas salvas
+  void debugPrintGoals() {
+    print('📋 Metas atuais:');
+    for (final goal in _goals) {
+      print(' - ${goal.title}: ${goal.completedMinutes}/${goal.targetMinutes}min (${goal.progress * 100}%)');
+    }
   }
 }

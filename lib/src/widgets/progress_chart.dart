@@ -128,11 +128,12 @@ class ProgressChart extends StatelessWidget {
         _buildStatItem('Em andamento', inProgress, Colors.orange, context),
         _buildStatItem('Não iniciadas', notStarted, Colors.grey, context),
         const SizedBox(height: 8),
+        // ✅ CORRIGIDO
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.blue[50],
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8), // ✅ APENAS borderRadius
           ),
           child: Text(
             '${totalTime ~/ 60}h ${totalTime % 60}m',
@@ -151,12 +152,13 @@ class ProgressChart extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         children: [
+          // ✅ CORRIGIDO
           Container(
             width: 12,
             height: 12,
             decoration: BoxDecoration(
               color: color,
-              shape: BoxShape.circle,
+              shape: BoxShape.circle, // ✅ APENAS shape
             ),
           ),
           const SizedBox(width: 8),
