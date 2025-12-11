@@ -2,26 +2,16 @@ import '../../domain/entities/goal_entity.dart';
 
 class GoalModel extends GoalEntity {
   GoalModel({
-    required String id,
-    required String title,
-    required String description,
-    required DateTime deadline,
-    required double progress,
-    required DateTime createdAt,
-    required int targetMinutes,
-    required int completedMinutes,
-    required bool isCompleted,
-  }) : super(
-          id: id,
-          title: title,
-          description: description,
-          deadline: deadline,
-          progress: progress,
-          createdAt: createdAt,
-          targetMinutes: targetMinutes,
-          completedMinutes: completedMinutes,
-          isCompleted: isCompleted,
-        );
+    required super.id,
+    required super.title,
+    required super.description,
+    required super.deadline,
+    required super.progress,
+    required super.createdAt,
+    required super.targetMinutes,
+    required super.completedMinutes,
+    required super.isCompleted,
+  });
 
   factory GoalModel.fromJson(Map<String, dynamic> json) {
     return GoalModel(

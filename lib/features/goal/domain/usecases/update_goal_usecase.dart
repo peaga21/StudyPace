@@ -1,5 +1,5 @@
 import '../entities/goal_entity.dart';
-import '../repositories/goal_repository.dart';
+import '../../data/repositories/goal_repository.dart';
 
 class UpdateGoalUseCase {
   final GoalRepository repository;

@@ -11,7 +11,7 @@ import '../features/goal/data/datasources/goal_local_datasource_impl.dart';
 import '../features/goal/data/repositories/study_goal_repository_adapter.dart';
 
 // Domain Layer
-import '../features/goal/domain/repositories/goal_repository.dart';
+import '../features/goal/data/repositories/goal_repository.dart';
 import '../features/goal/domain/usecases/get_goals_usecase.dart';
 import '../features/goal/domain/usecases/create_goal_usecase.dart';
 import '../features/goal/domain/usecases/update_goal_usecase.dart';

@@ -10,9 +10,32 @@ import 'features/goal/presentation/providers/goal_provider.dart';
 import 'features/goal/presentation/screens/home_screen_clean.dart';
 
 void main() async {
+  // 1. Garante que a engine do Flutter está pronta antes de qualquer coisa
   WidgetsFlutterBinding.ensureInitialized();
-  await setupInjector();
-  runApp(const MyApp());
+
+  try {
+    print("--- INICIANDO SETUP INJECTOR ---");
+    // 2. Tenta iniciar a injeção de dependência
+    await setupInjector();
+    print("--- SETUP INJECTOR SUCESSO ---");
+    
+    // 3. Se passou daqui, roda o app
+    runApp(const MyApp());
+  } catch (e, stackTrace) {
+    // 4. Se der erro no setupInjector, vai aparecer aqui
+    print("!!! ERRO FATAL AO INICIAR O APP !!!");
+    print("Erro: $e");
+    print("Stack: $stackTrace");
+    
+    // Opcional: Roda um app de erro visual para você saber que falhou
+    runApp(MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text("Erro ao iniciar: $e", textAlign: TextAlign.center),
+        ),
+      ),
+    ));
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -22,11 +45,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Provider do módulo Goal (Clean Architecture)
+        // ATENÇÃO: Se o GoalProvider não estiver registrado no injector.dart,
+        // o app vai quebrar assim que tentar usar este Provider.
         ChangeNotifierProvider(
-          create: (context) => getIt<GoalProvider>(),
+          create: (context) {
+            try {
+              return getIt<GoalProvider>();
+            } catch (e) {
+              print("Erro ao buscar GoalProvider no GetIt: $e");
+              rethrow;
+            }
+          },
         ),
-        // Adicione outros providers aqui conforme for migrando
       ],
       child: MaterialApp(
         title: 'StudyPace',
@@ -34,12 +64,10 @@ class MyApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         
-        // Rota inicial (fluxo completo do app)
         home: const SplashScreen(),
         
         debugShowCheckedModeBanner: false,
         
-        // Rotas nomeadas para navegação
         routes: {
           '/splash': (context) => const SplashScreen(),
           '/onboarding': (context) => const OnboardingScreen(),

@@ -1,5 +1,5 @@
 // lib/features/goal/domain/usecases/delete_goal_usecase.dart
-import '../repositories/goal_repository.dart';
+import '../../data/repositories/goal_repository.dart';
 
 class DeleteGoalUseCase {
   final GoalRepository repository;
