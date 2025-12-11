@@ -1,4 +1,5 @@
-# StudyPace - Clean Architecture
+# StudyPace - Entities,DTO e mappers
+Pedro Henrique Dias
 
 ## Estrutura Implementada:
 
